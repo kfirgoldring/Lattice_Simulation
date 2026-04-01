@@ -128,7 +128,7 @@ class LatticeSimulation:
                 theta = (L1 - x_mid)  # constant left positive phase shift
             elif x <= L2:
                 theta = (x - x_mid)  # linear ramp inside junction
-            else:
+            else:#x>L2
                 theta = (L2 - x_mid)  # constant right negative phase shift
             data[n] *= np.exp(2j * np.pi * alpha * theta)
         return sparse.coo_matrix((data, (hy.row, hy.col)), shape=hy.shape).tocsr()
@@ -190,7 +190,7 @@ class LatticeSimulation:
         for y in range(self.Ly):
             # y-dependent phase difference (left SC vs right SC)
             # FIX: use W consistently instead of (L2 - L1)
-            phi_y = phi_0 +4.0 * np.pi * alpha * W * y  # phase difference grows linearly with y due to A=(0,Bx,0)
+            phi_y = phi_0+ 4.0 * np.pi * alpha * W * y  # phase difference grows linearly with y due to A=(0,Bx,0)
             for x in range(self.Lx):
                 #phase profile :left SC: postive phase phi/2 , right SC: negative phase -phi/2
                 if x < L1:
@@ -199,7 +199,7 @@ class LatticeSimulation:
                     # junction: Δ=0
                     Delta_site = sparse.csr_matrix((2, 2), dtype=complex)
                 else:
-                    # right SC: negative  phase A
+                    # right SC: positive phase thetay/2
                     Delta_site = 1j * Delta0 * sigma_y*np.exp(0.5j*phi_y)
                 Delta_blocks.append(Delta_site)
 

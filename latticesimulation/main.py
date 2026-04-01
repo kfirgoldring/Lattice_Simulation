@@ -447,7 +447,7 @@ def plot_spectrum_at_integers_only():
     # We can afford a slightly larger lattice since we only run 7 steps
     sim = LatticeSimulation(30, 30, boundary_condition_x='obc', boundary_condition_y='pbc')
     L1, L2 = 10, 20
-    W = L2 - L1 + 1
+    W = L2 - L1
 
     # 2. Define Flux Grid (Integers ONLY)
     n_values = np.arange(0, 7)  # [0, 1, 2, 3, 4, 5, 6]
@@ -856,15 +856,15 @@ def plot_top_states_by_R(
 #results = plot_lowest_positive_bdg_state()
 #plot_lowest_positive_bdg_phase()
 
-#plot_spectrum_at_integers_only()
+plot_spectrum_at_integers_only()
 
 
-#results = plot_10_lowest_energy_eigenstates(Lx=30, Ly=30, n=5)
+# = plot_10_lowest_energy_eigenstates(Lx=30, Ly=30, n=5)
 
 #plot_bcs_dispersion()
 #run_bcs_simulation(40,40,1.0,2,1,1,'pbc')
 #run_simulation()
 #run_josephson_simulation(30,30,1.0,2,0.3,0.2,10,20,'pbc')
-#run_josephson_current_operator(30,30,1.0,1/(30*11),0.3,0.2,0.2,10,20)
+#run_josephson_current_operator(30,30,1.0,1/(30*10),0.4,0.1,0.1,10,20)
 #josephson_current_vs_vortice_number(30,30,1.0,0.3,0.2,0.2,10,20)
-plot_current_streamlines_gauge_invariant(n=2)
+plot_current_streamlines_gauge_invariant(n=1)
