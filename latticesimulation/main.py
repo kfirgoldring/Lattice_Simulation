@@ -3,8 +3,18 @@ import matplotlib.pyplot as plt
 import scipy.sparse as sparse
 from pathlib import Path
 import scipy.sparse.linalg as sla
-from lattice_simulation import  LatticeSimulation
+from latticesimulation.lattice_simulation import LatticeSimulation
 
+PLOTS_DIR = Path(__file__).resolve().parent.parent / "plots"
+VORTICES_Y_GAUGE_DIR = PLOTS_DIR / "vortices" / "y_gauge"
+
+
+def _show_or_close():
+    # Avoid UserWarning on non-interactive backends (e.g., FigureCanvasAgg).
+    if "agg" in str(plt.get_backend()).lower():
+        plt.close()
+    else:
+        plt.show()
 
 
 def run_simulation():
@@ -63,11 +73,10 @@ def run_simulation():
     ax_obc.plot(energies, real_dos, color='black', label='Theoretical DOS')
     ax_obc.legend()
     ax_obc.grid(True, alpha=0.3)
-    out_dir = Path(__file__).resolve().parent / "plots"
-    out_dir.mkdir(parents=True, exist_ok=True)
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
-    plt.savefig(out_dir / f"dirac_real_vs_numerical.jpg", dpi=300)
-    plt.show()
+    plt.savefig(PLOTS_DIR / "dirac_real_vs_numerical.jpg", dpi=300)
+    _show_or_close()
 
 def run_bcs_simulation(Lx,Ly,t_hop,mass,mu,Delta0,bc):
     '''
@@ -88,8 +97,9 @@ def run_bcs_simulation(Lx,Ly,t_hop,mass,mu,Delta0,bc):
     ax_pbc.set_ylabel("DOS (Count)", fontsize=12)
     ax_pbc.set_xlabel("Energy (E)", fontsize=12)
     ax_pbc.grid(True, alpha=0.3)
-    plt.savefig("bdg_pbc.jpg", dpi=300)
-    plt.show()
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    plt.savefig(PLOTS_DIR / "bdg_pbc.jpg", dpi=300)
+    _show_or_close()
     print(f"  Completed BCS simulation for {bc.upper()}.")
     return energies_bdg
 
@@ -178,10 +188,9 @@ def run_josephson_current_operator(Lx, Ly, t_hop,alpha, mass, mu, Delta0, L1, L2
     plt.ylabel(r"Current $I(\varphi)$ (arb. units)")
     plt.title(rf"Josephson Current VS Phase Difference, $\alpha$={alpha}")
     # Save to project's plots/ directory with a safe filename (avoid $ and LaTeX in filenames)
-    out_dir = Path(__file__).resolve().parent / "plots"
-    out_dir.mkdir(parents=True, exist_ok=True)
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
     safe_name = f"josephson_current_in_2_ways_alpha_{alpha}.jpg"
-    save_path = out_dir / safe_name
+    save_path = PLOTS_DIR / safe_name
     plt.savefig(save_path, dpi=300)
     plt.tight_layout()
     print(f"Saved Josephson current plot to: {save_path}")
@@ -202,9 +211,9 @@ def josephson_current_vs_vortice_number(Lx, Ly, t_hop, mass, mu, Delta0, L1, L2,
     plt.xlabel(r"Flux normalization $n$")
     plt.ylabel(r"Max. Josephson Current $I_max$")
     plt.title(rf"Josephson Current VS Flux Normalization")
-    output_path=Path("/plots/vortices/y_gauge")
-    plt.savefig(output_path/"josephson_current_vs_flux_normalization.jpg", dpi=300)
-    plt.show()
+    VORTICES_Y_GAUGE_DIR.mkdir(parents=True, exist_ok=True)
+    plt.savefig(VORTICES_Y_GAUGE_DIR / "josephson_current_vs_flux_normalization.jpg", dpi=300)
+    _show_or_close()
 
 
 
@@ -281,8 +290,9 @@ def plot_bcs_dispersion(t=1.0, m=1.0, mu=0.3, Delta0=0.2,
     plt.title(f"BdG dispersion (ky={ky:.2f}) | t={t}, m={m}, μ={mu}, Δ={Delta0}")
     plt.tight_layout()
     plt.legend()
-    plt.savefig(f"bdg_dispersion_ky{ky:.2f}.jpg", dpi=300)
-    plt.show()
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    plt.savefig(PLOTS_DIR / f"bdg_dispersion_ky{ky:.2f}.jpg", dpi=300)
+    _show_or_close()
 
 
 import matplotlib.pyplot as plt
@@ -369,8 +379,9 @@ def plot_lowest_positive_bdg_state():
         plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
 
     plt.suptitle("Lowest Positive Energy State Density for Different Fluxes")
-    plt.savefig("all_rho_maps_1to6.png", dpi=300)
-    plt.show()
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    plt.savefig(PLOTS_DIR / "all_rho_maps_1to6.png", dpi=300)
+    _show_or_close()
 
     return results
 
@@ -437,8 +448,9 @@ def plot_lowest_positive_bdg_phase():
         plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04, label="Phase (rad)")
 
     plt.suptitle(r"Phase for Different Fluxes")
-    plt.savefig("all_phase_maps_1to6.png", dpi=300)
-    plt.show()
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    plt.savefig(PLOTS_DIR / "all_phase_maps_1to6.png", dpi=300)
+    _show_or_close()
 
     return results
 
@@ -514,7 +526,8 @@ def plot_spectrum_at_integers_only():
 
     plt.figure(fig1.number)
     plt.tight_layout()
-    plt.savefig("fig1_discrete_spectrum.png", dpi=300)
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    plt.savefig(PLOTS_DIR / "fig1_discrete_spectrum.png", dpi=300)
 
     # --- FIGURE 2: Minigap at Integers ---
     fig2, ax2 = plt.subplots(figsize=(8, 4))
@@ -539,8 +552,9 @@ def plot_spectrum_at_integers_only():
 
     plt.figure(fig2.number)
     plt.tight_layout()
-    plt.savefig("fig2_discrete_minigap.png", dpi=300)
-    plt.show()
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    plt.savefig(PLOTS_DIR / "fig2_discrete_minigap.png", dpi=300)
+    _show_or_close()
 
 
 # Run it
@@ -550,13 +564,16 @@ def plot_current_streamlines_gauge_invariant(n=4):
     print(f"--- Running Simulation for n={n} ---")
     # 1. Setup Simulation
     eps = 1e-10
-    sim = LatticeSimulation(30, 30, boundary_condition_x='obc', boundary_condition_y='pbc')
+    sim = LatticeSimulation(30, 30, boundary_condition_x='obc', boundary_condition_y='obc')
     L1, L2 = 10,20
-   # W = L2 - L1+1  # Matches Hamiltonian logic
-    alpha = n / ((L2-L1)* sim.Ly)
+    W = L2 - L1
+    # With current BdG phase profile phi_y = phi_0 + 4π * alpha * W * y,
+    # using 1/(2*W*Ly) makes total winding over y equal 2π*n (not 4π*n).
+    alpha = n / ( 2*W * sim.Ly)
     # 2. Build BdG Hamiltonian
+    m_model = 0.3  # Choose a mass that gives a clear gap but still allows vortex modes (not too large)ע
     H_bdg = sim.get_bdg_josephson_hamiltonian(
-        t=1, m=0.4, mu=0.1, Delta0=0.1,
+        t=1, m=m_model, mu=0.1, Delta0=0.1,
         phi_0=np.pi/4, alpha=alpha, L1=L1, L2=L2
     )
     # This call will now use the FIXED get_spectrum from the class above
@@ -572,10 +589,15 @@ def plot_current_streamlines_gauge_invariant(n=4):
 
     for idx in sorted_pos_indices:
         psi = evecs[:, idx]
-        psi_flat = np.asarray(psi).flatten()  # Force 1D
-
-        # Calculate Density
-        density_on_site = np.sum(np.abs(psi_flat.reshape(sim.N, -1)) ** 2, axis=1)
+        psi_flat = np.asarray(psi).ravel()
+        dim_e = 2 * sim.N
+        u = psi_flat[:dim_e]
+        v = psi_flat[dim_e:]
+        # BdG basis is [u(2N), v(2N)], so build site density explicitly.
+        density_on_site = (
+            np.square(np.abs(u[0::2])) + np.square(np.abs(u[1::2])) +
+            np.square(np.abs(v[0::2])) + np.square(np.abs(v[1::2]))
+        ).real
 
         # Junction Mask
         x_coords = np.arange(sim.N) % sim.Lx
@@ -601,7 +623,7 @@ def plot_current_streamlines_gauge_invariant(n=4):
     dim_e = 2 * sim.N
     u = psi[:dim_e]
 
-    H0 = sim.get_dirac_hamiltonian(t=1, m=0.3, alpha=alpha, L1=L1, L2=L2).tocsr()
+    H0 = sim.get_dirac_hamiltonian(t=1, m=m_model, alpha=alpha, L1=L1, L2=L2).tocsr()
 
     Jx_bond = np.zeros((sim.Ly, sim.Lx - 1), dtype=float)
     Jy_bond = np.zeros((sim.Ly - 1, sim.Lx), dtype=float)
@@ -656,18 +678,19 @@ def plot_current_streamlines_gauge_invariant(n=4):
     xgrid = np.arange(sim.Lx)
     ygrid = np.arange(sim.Ly)
 
-    output_dir = Path("plots/vortices/y_gauge")
-    output_dir.mkdir(parents=True, exist_ok=True)
+    VORTICES_Y_GAUGE_DIR.mkdir(parents=True, exist_ok=True)
 
     plt.figure(figsize=(10, 6))
     st = plt.streamplot(xgrid, ygrid, Jx, Jy, color=Jmag, density=2.0, arrowsize=1.5, cmap='viridis')
     plt.colorbar(st.lines, label="|J|")
-    plt.title(f"Gauge-invariant Streamlines n={n}\nE={evals[selected_idx]:.5e}")
+    plt.title(f"Gauge-invariant Streamlines n={n}, alpha={alpha:.6e}\nE={evals[selected_idx]:.5e}")
     plt.xlabel("x");
     plt.ylabel("y")
 
-    plt.savefig(output_dir / f"gauge_invariant_streamlines_n{n}.png", dpi=300)
-    plt.show()
+
+    plt.savefig(VORTICES_Y_GAUGE_DIR / f"gauge_invariant_streamlines_n{n}.png", dpi=300)
+    _show_or_close()
+    print(f"  Completed Streamline simulation for n={n},saved to {VORTICES_Y_GAUGE_DIR / f'gauge_invariant_streamlines_n{n}.png'}")
 
 
 # Run it
@@ -713,10 +736,9 @@ def plot_10_lowest_energy_eigenstates(Lx=30, Ly=30, n=4, t=1.0, m=0.3, mu=0.2, D
             axs[i].set_title(f"{i + 1}: E={E:.3e}", fontsize=10)
             plt.colorbar(im, ax=axs[i], fraction=0.046, pad=0.04)
 
-        out_path = Path("plots/vortices/y_gauge")
-        out_path.mkdir(parents=True, exist_ok=True)
-        plt.savefig(out_path / f"10_lowest_eigenstates_n{n}.png", dpi=300, bbox_inches="tight")
-        plt.show()
+        VORTICES_Y_GAUGE_DIR.mkdir(parents=True, exist_ok=True)
+        plt.savefig(VORTICES_Y_GAUGE_DIR / f"10_lowest_eigenstates_n{n}.png", dpi=300, bbox_inches="tight")
+        _show_or_close()
         return results
 
 
@@ -758,7 +780,7 @@ def plot_top_states_by_R(
     Emin=0.0, Emax=0.15,   # energy window on positive energies
     use_u_plus_v=True,
     exclude_interfaces=True,
-    out_dir="plots/vortices/y_gauge"
+    out_dir=VORTICES_Y_GAUGE_DIR
 ):
     """
     Diagonalize BdG, compute R for each +E eigenstate, sort by R, and plot top K densities.
@@ -846,25 +868,25 @@ def plot_top_states_by_R(
     outp.mkdir(parents=True, exist_ok=True)
     fname = f"top_by_R_n{n}_Ewin_{Emin:.3f}_{Emax:.3f}_K{K}.png"
     plt.savefig(outp / fname, dpi=300, bbox_inches="tight")
-    plt.show()
+    _show_or_close()
 
     return top
 
 
-#top = plot_top_states_by_R(Lx=30, Ly=30, n=5, K=10, Emin=0.0, Emax=0.12)
+if __name__ == "__main__":
+    #top = plot_top_states_by_R(Lx=30, Ly=30, n=5, K=10, Emin=0.0, Emax=0.12)
 
-#results = plot_lowest_positive_bdg_state()
-#plot_lowest_positive_bdg_phase()
+    #results = plot_lowest_positive_bdg_state()
+    #plot_lowest_positive_bdg_phase()
 
-plot_spectrum_at_integers_only()
+    #plot_spectrum_at_integers_only()
 
+    # = plot_10_lowest_energy_eigenstates(Lx=30, Ly=30, n=5)
 
-# = plot_10_lowest_energy_eigenstates(Lx=30, Ly=30, n=5)
-
-#plot_bcs_dispersion()
-#run_bcs_simulation(40,40,1.0,2,1,1,'pbc')
-#run_simulation()
-#run_josephson_simulation(30,30,1.0,2,0.3,0.2,10,20,'pbc')
-#run_josephson_current_operator(30,30,1.0,1/(30*10),0.4,0.1,0.1,10,20)
-#josephson_current_vs_vortice_number(30,30,1.0,0.3,0.2,0.2,10,20)
-plot_current_streamlines_gauge_invariant(n=1)
+    #plot_bcs_dispersion()
+    #run_bcs_simulation(40,40,1.0,2,1,1,'pbc')
+    #run_simulation()
+    #run_josephson_simulation(30,30,1.0,2,0.3,0.2,10,20,'pbc')
+    #run_josephson_current_operator(30,30,1.0,1/(30*10),0.4,0.1,0.1,10,20)
+    #josephson_current_vs_vortice_number(30,30,1.0,0.3,0.2,0.2,10,20)
+    plot_current_streamlines_gauge_invariant(n=4)
