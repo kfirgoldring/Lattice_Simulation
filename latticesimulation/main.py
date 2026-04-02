@@ -564,7 +564,7 @@ def plot_current_streamlines_gauge_invariant(n=4):
     print(f"--- Running Simulation for n={n} ---")
     # 1. Setup Simulation
     eps = 1e-10
-    sim = LatticeSimulation(30, 30, boundary_condition_x='obc', boundary_condition_y='obc')
+    sim = LatticeSimulation(30, 30, boundary_condition_x='obc', boundary_condition_y='pbc')
     L1, L2 = 10,20
     W = L2 - L1
     # With current BdG phase profile phi_y = phi_0 + 4π * alpha * W * y,
@@ -573,7 +573,7 @@ def plot_current_streamlines_gauge_invariant(n=4):
     # 2. Build BdG Hamiltonian
     m_model = 0.3  # Choose a mass that gives a clear gap but still allows vortex modes (not too large)ע
     H_bdg = sim.get_bdg_josephson_hamiltonian(
-        t=1, m=m_model, mu=0.1, Delta0=0.1,
+        t=1, m=m_model, mu=0.05, Delta0=0.05,
         phi_0=np.pi/4, alpha=alpha, L1=L1, L2=L2
     )
     # This call will now use the FIXED get_spectrum from the class above
@@ -889,4 +889,4 @@ if __name__ == "__main__":
     #run_josephson_simulation(30,30,1.0,2,0.3,0.2,10,20,'pbc')
     #run_josephson_current_operator(30,30,1.0,1/(30*10),0.4,0.1,0.1,10,20)
     #josephson_current_vs_vortice_number(30,30,1.0,0.3,0.2,0.2,10,20)
-    plot_current_streamlines_gauge_invariant(n=4)
+    plot_current_streamlines_gauge_invariant(n=6 )
