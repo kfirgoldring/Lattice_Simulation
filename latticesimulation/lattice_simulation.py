@@ -181,8 +181,7 @@ class LatticeSimulation:
         W = (L2 - L1 ) # junction width in x sites (matches your Δ=0 for L1<=x<=L2)
         # (Optional but recommended) enforce PBC-in-y quantization:
         # alpha * W * Ly must be integer for Δ(y) to be periodic.
-        print (self.Ly)
-        print (W)
+
         q = alpha * W * self.Ly
         if abs(q - round(q)) > 1e-8 and abs(alpha) > 1e-15:
             print(f"Warning: PBC in y prefers n= alpha*W*Ly integer; got {q:.6f}")

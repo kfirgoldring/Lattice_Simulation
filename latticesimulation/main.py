@@ -186,7 +186,7 @@ def run_josephson_current_operator(Lx, Ly, t_hop,alpha, mass, mu, Delta0, L1, L2
     plt.grid(alpha=0.3)
     plt.xlabel(r"Phase difference $\varphi$")
     plt.ylabel(r"Current $I(\varphi)$ (arb. units)")
-    plt.title(rf"Josephson Current VS Phase Difference, $\alpha$={alpha}")
+    plt.title(rf"Josephson Current VS Phase Difference")
     # Save to project's plots/ directory with a safe filename (avoid $ and LaTeX in filenames)
     PLOTS_DIR.mkdir(parents=True, exist_ok=True)
     safe_name = f"josephson_current_in_2_ways_alpha_{alpha}.jpg"
@@ -887,6 +887,6 @@ if __name__ == "__main__":
     #run_bcs_simulation(40,40,1.0,2,1,1,'pbc')
     #run_simulation()
     #run_josephson_simulation(30,30,1.0,2,0.3,0.2,10,20,'pbc')
-    #run_josephson_current_operator(30,30,1.0,1/(30*10),0.4,0.1,0.1,10,20)
+    run_josephson_current_operator(30,30,1.0,0,0.4,0.1,0.1,10,20)
     #josephson_current_vs_vortice_number(30,30,1.0,0.3,0.2,0.2,10,20)
-    plot_current_streamlines_gauge_invariant(n=6 )
+   # plot_current_streamlines_gauge_invariant(n=6 )
